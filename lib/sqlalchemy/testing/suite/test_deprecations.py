@@ -36,6 +36,7 @@ class DeprecatedCompoundSelectTest(fixtures.TablesTest):
     def _assert_result(self, conn, select, result, params=()):
         eq_(conn.execute(select, params).fetchall(), result)
 
+    @testing.requires.order_by_col_from_union
     def test_plain_union(self, connection):
         table = self.tables.some_table
         s1 = select(table).where(table.c.id == 2)
@@ -102,6 +103,7 @@ class DeprecatedCompoundSelectTest(fixtures.TablesTest):
                 connection, u1.order_by(u1.c.id), [(2, 2, 3), (3, 3, 4)]
             )
 
+    @testing.requires.order_by_col_from_union
     def test_distinct_selectable_in_unions(self, connection):
         table = self.tables.some_table
         s1 = select(table).where(table.c.id == 2).distinct()
@@ -116,6 +118,7 @@ class DeprecatedCompoundSelectTest(fixtures.TablesTest):
                 connection, u1.order_by(u1.c.id), [(2, 2, 3), (3, 3, 4)]
             )
 
+    @testing.requires.order_by_col_from_union
     def test_limit_offset_aliased_selectable_in_unions(self, connection):
         table = self.tables.some_table
         s1 = (
