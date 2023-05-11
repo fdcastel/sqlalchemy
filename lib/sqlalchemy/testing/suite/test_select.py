@@ -854,6 +854,7 @@ class CompoundSelectTest(fixtures.TablesTest):
         with config.db.connect() as conn:
             eq_(conn.execute(select, params).fetchall(), result)
 
+    @testing.requires.order_by_col_from_union
     def test_plain_union(self):
         table = self.tables.some_table
         s1 = select(table).where(table.c.id == 2)
@@ -897,6 +898,7 @@ class CompoundSelectTest(fixtures.TablesTest):
             u1.order_by(u1.selected_columns.id), [(2, 2, 3), (3, 3, 4)]
         )
 
+    @testing.requires.order_by_col_from_union
     def test_distinct_selectable_in_unions(self):
         table = self.tables.some_table
         s1 = select(table).where(table.c.id == 2).distinct()
@@ -919,6 +921,7 @@ class CompoundSelectTest(fixtures.TablesTest):
             u1.select().limit(2).order_by(u1.c.id), [(2, 2, 3), (3, 3, 4)]
         )
 
+    @testing.requires.order_by_col_from_union
     def test_limit_offset_aliased_selectable_in_unions(self):
         table = self.tables.some_table
         s1 = (
